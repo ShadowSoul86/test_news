@@ -27,7 +27,7 @@
 
 ## <a name="description">Описание</a>
 
-Приложение написан на TS, используя NestJS, TypeORM, swagger (доступен по [/swagger]())
+Приложение написано на TS, используя NestJS, TypeORM, swagger (доступен по [/swagger]())
 
 * #### Запросы
     * `GET` `/categories` - Список категорий
