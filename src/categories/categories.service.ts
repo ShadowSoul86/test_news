@@ -6,34 +6,25 @@ import { Not, Repository } from "typeorm";
 import { CreateOrUpdateCategoryDto } from "./dto/create-or-update-category.dto";
 
 function translit(slug: string) {
-  const ru =
-    "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я".split(
-      "-",
-    );
-  const en =
-    "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya".split(
-      "-",
-    );
-
-  let translitedSlug = "";
-  for (let i = 0, l = slug.length; i < l; i++) {
-    const s = slug.charAt(i),
-      n = ru.indexOf(s);
-    if (n >= 0) {
-      translitedSlug += en[n];
-    } else {
-      translitedSlug += s;
-    }
+  const ruToEnMap = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'ґ': 'g', 'г': 'g', 'д': 'd', 'е': 'e',
+    'ё': 'e', 'є': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i', 'і': 'i', 'ї': 'i',
+    'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p',
+    'р': 'r', 'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts',
+    'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': "'", 'ы': 'y', 'ь': "'", 'э': 'e',
+    'ю': 'yu', 'я': 'ya'
   }
-
-  return translitedSlug;
+  return slug.split('').map(char => {
+    return ruToEnMap[char] || char;
+  }).join('')
 }
 
 function generateSlug(name: string) {
-  let slug = translit(name.replace(/[\s]+/gi, "-"));
-  slug = slug.replace(/[^0-9a-z_-]+/gi, "");
-  slug = slug.toLowerCase();
-  return slug;
+  return translit(
+    name
+      .toLowerCase()
+      .replace(/[\s]+/gi, "-")
+  ).replace(/[^0-9a-z_-]+/gi, "");
 }
 
 @Injectable()
